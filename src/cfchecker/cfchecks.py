@@ -1812,9 +1812,28 @@ class CFChecker(object):
                                    'depth': ['sea_floor_depth_below_mean_ sea_level'],
                                    'csn': ['height_above_mean_sea_level']}
 
+    def _as_blank_separated_string(self, value):
+        """Coerce a list-like CF attribute value into the string form expected by regex checks."""
+        if value is None:
+            return ''
+
+        if isinstance(value, (list, tuple, np.ndarray)):
+            items = []
+            for item in np.asarray(value).ravel().tolist():
+                if isinstance(item, bytes):
+                    item = item.decode('utf-8', errors='replace')
+                items.append(str(item))
+            return ' '.join(items)
+
+        if isinstance(value, bytes):
+            return value.decode('utf-8', errors='replace')
+
+        return str(value)
+
     def parseBlankSeparatedList(self, list):
         """Parse blank separated list"""
-        if re.match("^[a-zA-Z0-9_ ]*$",list):
+        value = self._as_blank_separated_string(list)
+        if re.match(r"^[a-zA-Z0-9_ ]*$", value):
             return 1
         else:
             return 0
@@ -1822,7 +1841,8 @@ class CFChecker(object):
     def extendedBlankSeparatedList(self, list):
         """Check list is a blank separated list of words containing alphanumeric characters
         plus underscore '_', period '.', plus '+', hyphen '-', or "at" sign '@'."""
-        if re.match("^[a-zA-Z0-9_ @\-\+\.]*$", list):
+        value = self._as_blank_separated_string(list)
+        if re.match(r"^[a-zA-Z0-9_ @\-\+\.]*$", value):
             return 1
         else:
             return 0
@@ -1830,7 +1850,8 @@ class CFChecker(object):
     def commaOrBlankSeparatedList(self, list):
         """Check list is a blank or comma separated list of words containing alphanumeric
         characters plus underscore '_', period '.', plus '+', hyphen '-', or "at" sign '@'."""
-        if re.match("^[a-zA-Z0-9_ @\-\+\.,]*$", list):
+        value = self._as_blank_separated_string(list)
+        if re.match(r"^[a-zA-Z0-9_ @\-\+\.,]*$", value):
             return 1
         else:
             return 0
