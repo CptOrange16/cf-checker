@@ -3385,16 +3385,37 @@ class CFChecker(object):
         (increasing or decreasing)."""
         values = self.f.variables[varName][:]
 
-        if not self.isStrictlyMonotonic(values):
-            self._add_error("co-ordinate variable not monotonic", varName, code="5")
+        try:
+            if not self.isStrictlyMonotonic(values):
+                self._add_error("co-ordinate variable not monotonic", varName, code="5")
+        except (TypeError, ValueError):
+            # Non-numeric coordinate values are not valid inputs for monotonicity
+            # checks; skip the check rather than crashing the validator.
+            return
 
     def isStrictlyMonotonic(self, values):
         """Is array strictly monotonic increasing or decreasing"""
+        values = numpy.asarray(values)
 
-        if numpy.all(numpy.diff(values) > 0):
+        if values.size < 2:
+            return 0
+
+        dtype = values.dtype
+        if dtype.kind in ('S', 'U', 'O', 'c'):
+            return 0
+
+        if not (
+            numpy.issubdtype(dtype, numpy.number)
+            or numpy.issubdtype(dtype, numpy.datetime64)
+            or numpy.issubdtype(dtype, numpy.timedelta64)
+        ):
+            return 0
+
+        diffs = numpy.diff(values)
+        if numpy.all(diffs > 0):
             # monotonic increasing
             return 1
-        elif numpy.all(numpy.diff(values) < 0):
+        elif numpy.all(diffs < 0):
             # monotonic decreasing
             return 2
         else:
