@@ -26,6 +26,18 @@ To install from [Conda-forge](https://github.com/conda-forge/cfchecker-feedstock
     conda create -n cfchecker -c conda-forge cfchecker # create new env OR
     conda install cfchecker -c conda-forge             # install on existing env
 
+### Maintained fork install
+
+This repository is the maintained fork of the upstream CF Checker. Install the latest maintained release directly from GitHub:
+
+    pip install "cfchecker @ git+https://github.com/CptOrange16/cf-checker.git@4.1.1"
+
+Or add it to `requirements.txt`:
+
+    cfchecker @ git+https://github.com/CptOrange16/cf-checker.git@4.1.1
+
+This fork provides the same `cfchecker` module and `cfchecks` command as the original, so do not install both in the same environment.
+
 Alternatively, to install from source:
 
 1. Download the cfchecker package from [cfchecker releases](https://github.com/cedadev/cf-checker/releases)

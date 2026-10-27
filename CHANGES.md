@@ -3,6 +3,21 @@
 See https://github.com/cedadev/cf-checker/milestones?state=closed for full details of each release.
 
 -----------------------------------------------------------------
+## October 2026
+
+CF Checker release 4.1.1
+
+This is the first release of the maintained fork of the upstream cf-checker project. The upstream project has had no releases since 4.1.0, so this fork continues development and maintenance.
+
+### Fixes included
+
+* Guard `attrLookup` against unmapped attribute types.
+* Handle list-valued CF attributes without crashing.
+* Fix crash on string-valued coordinate monotonicity checks.
+
+**Full Changelog**: https://github.com/cedadev/cf-checker/compare/4.1.0...CptOrange16:cf-checker:4.1.1
+
+-----------------------------------------------------------------
 ## May 2021
 
 CF Checker release 4.1.0
